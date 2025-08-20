@@ -1,9 +1,9 @@
-package com.mc.algorism.sec04;
+package com.mc.algorism.sec04.list;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
-
-public class _ArrayList<E> {
+public class _ArrayList<E> implements Iterable<E> {
 
     private Object[] elementData;
     private int size;
@@ -74,13 +74,23 @@ public class _ArrayList<E> {
         return "_ArrayList [elementData=" + Arrays.toString(elementData) + "]";
     }
 
+    @Override
+    public Iterator<E> iterator(){
+        return new Iterator<E>(){
 
+            private int pointer = 0;
 
+            @Override
+            public boolean hasNext() {
+                return pointer < size ? true : false;
+            }
 
-
-
-
-
-
-
+            @Override
+            public E next() {
+                E res = (E) elementData[pointer];
+                pointer++;
+                return res;
+            }
+        };
+    }
 }
