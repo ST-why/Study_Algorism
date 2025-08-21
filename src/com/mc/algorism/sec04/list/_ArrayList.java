@@ -22,6 +22,7 @@ public class _ArrayList<E> implements Iterable<E> {
         return size;
     }
 
+    // 질문? 공식 홈페이지에서는 객체안에 요소가 없으 true : false
     public boolean isEmpty() {
         return size == 0;
     }

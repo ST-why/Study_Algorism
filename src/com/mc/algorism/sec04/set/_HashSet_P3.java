@@ -1,21 +1,24 @@
 package com.mc.algorism.sec04.set;
 
 import com.mc.algorism.sec04.list.Node;
+import com.mc.algorism.sec04.list._ArrayList;
+import com.mc.algorism.sec04.list._LinkedList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
 
-@SuppressWarnings("unchecked")
-public class _HashSet_P2<E> implements Iterable<E> {
+// LinkedList를 사용해서 HashSet 구현
+public class _HashSet_P3<E> implements Iterable<E> {
 
     private int arraySize = 2;
     private Object[] table;
     private int size = 0;
 
-    public _HashSet_P2() {
+    public _HashSet_P3() {
         this.table = new Object[arraySize];
     }
 
-    public _HashSet_P2(int initialCapacity) {
+    public _HashSet_P3(int initialCapacity) {
         this.table = new Object[initialCapacity];
     }
 
@@ -47,56 +50,39 @@ public class _HashSet_P2<E> implements Iterable<E> {
     private boolean addNode(E e) {
         int index = hash(e);
         Node<E> node = new Node<E>(e);
-        Node<E> head = (Node<E>) table[index];
+        _LinkedList<E> row = (_LinkedList<E>) table[index];
 
-        if (head == null) {
-            table[index] = node;
+        if (row == null) {
+            _LinkedList<E> newRow = new _LinkedList<>();
+            newRow.add(e);
+            table[index] = newRow;
             return true;
         }
-
-        Node<E> link = head;
-        while (link.next() != null) {
-            if (link.data().equals(e)) {
-                return false;
-            }
-            link = link.next();
-        }
-
-        if (link.data().equals(e)) {
+        
+        if(row.contains(e)) {
             return false;
         }
-        link.next(node);
         return true;
     }
 
     public boolean remove(E data) {
         int index = hash(data);
-        Node<E> head = (Node<E>) table[index];
+        _LinkedList<E> row = (_LinkedList<E>) table[index];
 
-        if (head == null) {
+        if (row == null) {
             return false;
         }
-        if (head.data().equals(data)) {
-            table[index] = head.next();
-            size--;
-            return true;
+
+        if(!row.contains(data)) {
+            return false;
         }
 
-        Node<E> link = head.next();
-        Node<E> prev = head;
-
-        while (link != null) {
-            if (link.data().equals(data)) {
-                prev.next(link.next());
-                size--;
-                return true;
-            }
-
-            prev = link;
-            link = link.next();
+        row.remove(row.indexOf(data));
+        if(row.isEmpty()) {
+            table[index] = null;
         }
-
-        return false;
+        size--;
+        return true;
     }
 
     private void resize() {
@@ -108,11 +94,10 @@ public class _HashSet_P2<E> implements Iterable<E> {
             if (temp[i] == null) {
                 continue;
             }
-            Node<E> link = (Node<E>) temp[i];
+            _LinkedList<E> row = (_LinkedList<E>)temp[i];
 
-            while (link != null) {
-                addNode(link.data());
-                link = link.next();
+            for(E e : row) {
+                addNode(e);
             }
         }
     }
@@ -127,10 +112,9 @@ public class _HashSet_P2<E> implements Iterable<E> {
             if (table[i] == null) {
                 continue;
             }
-            Node<E> link = (Node<E>) table[i];
-            while (link != null) {
-                sb.append(link.data()).append(", ");
-                link = link.next();
+            _LinkedList<E> row = (_LinkedList)table[i];
+            for(E e : row) {
+                sb.append(e).append(",");
             }
         }
 
@@ -147,8 +131,8 @@ public class _HashSet_P2<E> implements Iterable<E> {
 
             private int cnt = 0;
             private int rowPointer = -1;
-            private Node<E> prev = new Node<>(null);
-
+            private _LinkedList<E> row = new _LinkedList<>();
+            private Iterator<E> rowIterator = row.iterator();
 
             @Override
             public boolean hasNext() {
@@ -157,26 +141,20 @@ public class _HashSet_P2<E> implements Iterable<E> {
 
             @Override
             public E next() {
-                if (prev.next() != null) {
-                    E data = prev.data();
-                    prev = prev.next();
+                if(rowIterator.hasNext()) {
                     cnt++;
-                    return data;
+                    return rowIterator.next();
                 }
-
                 do {
                     rowPointer++;
                 } while (table[rowPointer] == null);
-                prev = (Node<E>) table[rowPointer];
-                E data = prev.data();
+                row = (_LinkedList<E>)  table[rowPointer];
+                rowIterator = row.iterator();
                 cnt++;
-                return data ;
-
+                return rowIterator.next();
             }
         };
 
     }
 
-
 }
-

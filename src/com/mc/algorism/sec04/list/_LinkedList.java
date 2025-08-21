@@ -104,8 +104,6 @@ public class _LinkedList<E> implements Iterable<E>{
         return sb.toString();
     }
 
-    // iterator
-
     // contains
     public boolean contains(Object e) {
         Node<E> link = head;
@@ -134,17 +132,16 @@ public class _LinkedList<E> implements Iterable<E>{
     public Iterator<E> iterator() {
         return new Iterator<E>() {
 
-            private int pointer = 0;
+            private Node<E> pointer = head;
 
             @Override
             public boolean hasNext() {
-                return pointer < size;
+                return pointer != null;
             }
 
             @Override
             public E next() {
-                E  e = get(pointer);
-                pointer++;
+                E  e = pointer.data();
                 return e;
             }
         };

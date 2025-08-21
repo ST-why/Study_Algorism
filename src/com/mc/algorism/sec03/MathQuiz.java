@@ -25,7 +25,7 @@ public class MathQuiz {
     // 컴파일러가 내부적으로 반복문으로 최적화 / 자바 x
     private static int factorial2(int i, int j) {
         if (i < 0) {
-            throw new IllegalArgumentException("음수 펙토리얼은 존재하지 않습니다.");
+            throw  new IllegalArgumentException("음수 펙토리얼은 존재하지 않습니다.");
         }
         if (i <= 1) {
             return j;
