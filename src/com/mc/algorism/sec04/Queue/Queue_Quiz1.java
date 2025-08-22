@@ -6,8 +6,6 @@ public class Queue_Quiz1 {
 
     }
 
-    private static int pickup(int n, int k) {
 
-    }
 
 }
